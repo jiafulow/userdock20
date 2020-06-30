@@ -6,17 +6,33 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  IMAGE_NAME: image
-  IMAGE_TAG: experimental
-
 jobs:
 
   build:
 
     runs-on: ubuntu-latest
 
+    env:
+      IMAGE_NAME: my-cmssw
+      IMAGE_VERSION: latest
+      IMAGE_REGISTRY: docker.pkg.github.com
+
     steps:
     - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$IMAGE_TAG
+
+    - name: Build image
+      run: docker build . --file $IMAGE_NAME/Dockerfile --tag $IMAGE_NAME
+
+    - name: Log into registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $IMAGE_REGISTRY -u ${{ github.actor }} --password-stdin
+
+    - name: Push image to registry
+      run: |
+        IMAGE_ID=$IMAGE_REGISTRY/${{ github.repository }}/$IMAGE_NAME
+        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+        echo IMAGE_ID=$IMAGE_ID
+        echo IMAGE_VERSION=$IMAGE_VERSION
+
+        docker tag $IMAGE_NAME $IMAGE_ID:$IMAGE_VERSION
+        docker push $IMAGE_ID:$IMAGE_VERSION
