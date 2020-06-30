@@ -10,6 +10,11 @@ RUN python3 -m pip --no-cache-dir install --upgrade \
         setuptools
 
 RUN python3 -m pip --no-cache-dir install \
+        tensorflow==2.2.0 \
+        tensorflow-probability==0.10.0 \
+        neural-structured-learning==1.2.0
+
+RUN python3 -m pip --no-cache-dir install \
         jupyter \
         matplotlib \
         seaborn
