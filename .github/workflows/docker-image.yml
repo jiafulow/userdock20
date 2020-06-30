@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: my-cmssw
+      IMAGE_NAME: my-tensorflow
       IMAGE_VERSION: latest
       IMAGE_REGISTRY: docker.pkg.github.com
 
